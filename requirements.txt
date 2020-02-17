@@ -1,1 +1,2 @@
 Django==2.0.12
+iPython==7.12.0
