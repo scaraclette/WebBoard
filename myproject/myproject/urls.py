@@ -18,7 +18,19 @@ from django.urls import path
 
 from boards import views
 
+# TODO: format URLs to individual apps instead of main project URL
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
+    path('boards/<int:board_id>', views.board_topics, name='board_topics'),
 ]
+
+'''
+Changed URL to PATH
+boards: url(r'^boards/(?P<pk>\d+)/$', views.board_topics, name='board_topics)
+argument must match what's inside <...> in the tutorial, argument in function becomes 
+def board_topics(request, pk): ...
+Sice we did <int:board_id>, argument in function becomes
+def board_topics(request, board_id): ...
+A 
+'''

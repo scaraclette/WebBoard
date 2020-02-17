@@ -125,3 +125,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
+# URL Starting point already configured on line 53
+# ROOT_URLCONF = 'myproject.urls'
