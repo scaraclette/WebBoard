@@ -1,2 +1,6 @@
+<<<<<<< HEAD
 Django==2.0.12
 iPython==7.12.0
+=======
+Django==2.2.10
+>>>>>>> 13c91c94a9978ed37c76bb4dd2b0bb852da4ac32
