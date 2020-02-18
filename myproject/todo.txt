@@ -1,0 +1,3 @@
+Further comprehend the following:
+1. Be comfortable creating forms in Django.
+2. Read more about Django-Tweaks: https://simpleisbetterthancomplex.com/2015/12/04/package-of-the-week-django-widget-tweaks.html
