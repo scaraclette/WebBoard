@@ -65,9 +65,10 @@ class NewTopicTests(TestCase):
         Board.objects.create(name='Django', description='This is a board about Django.')
         User.objects.create_user(username='john', email='john@doe.com', password='123')
 
+    # Changed 'self.client.get(new_topic_url)' to 'post'
     def test_new_topic_view_success_status_code(self):
         url = reverse('new_topic', kwargs={'board_id': 1})
-        response = self.client.get(url)
+        response = self.client.post(url)
         self.assertEquals(response.status_code, 200)
 
     def test_new_topic_view_not_found_status_code(self):
@@ -80,17 +81,21 @@ class NewTopicTests(TestCase):
         view = resolve('/boards/1/new/')
         self.assertEquals(view.func, new_topic)
 
+    # Also changed 'self.client.get(new_topic_url)' to 'post'
     def test_new_topic_view_contains_link_back_to_board_topic_view(self):
         new_topic_url = reverse('new_topic', kwargs={'board_id':1})
         board_topics_url = reverse('board_topics', kwargs={'board_id':1})
-        response = self.client.get(new_topic_url)
+        response = self.client.post(new_topic_url)
         self.assertContains(response, 'href="{0}"'.format(board_topics_url))
 
-    # ...
-
     def test_csrf(self):
-        url = reverse('new_topic', kwargs={'pk': 1})
-        response = self.client.get(url)
+        url = reverse('new_topic', kwargs={'board_id': 1})
+        '''
+        This test was fixed because 'self.client.get(url)' was changed into 'self.client.post(url)'
+        which makes sense because we're testing a POST request within the view instead of GET
+        '''
+        response = self.client.post(url)
+        print(response)
         self.assertContains(response, 'csrfmiddlewaretoken')
 
     def test_new_topic_valid_post_data(self):
