@@ -1,6 +1,8 @@
+from django.contrib.auth.models import User
 from django.http import HttpResponse, Http404
-from django.shortcuts import render
-from .models import Board
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Board, Topic, Post
+from .forms import NewTopicForm
 
 # Create your views here.
 def home(request):
@@ -20,3 +22,29 @@ def board_topics(request, board_id):
         'board': board
     }
     return render(request, 'topics.html', context)
+
+def new_topic(request, board_id):
+    board = get_object_or_404(Board, id=board_id)
+    user = User.objects.first() # TODO: get the currently logged in user
+    if request.method == 'POST':
+        form = NewTopicForm(request.POST)
+        if form.is_valid():
+            topic = form.save(commit=False)
+            topic.board = board
+            topic.starter = user
+            topic.save()
+            post = Post.objects.create(
+                message=form.cleaned_data.get('message'),
+                topic=topic,
+                created_by=user
+            )
+            return redirect('board_topics', board_id=board.id) # TODO: redirect to the created topic page
+        else:
+            form = NewTopicForm()
+
+        context = {
+            'board':board,
+            'form':form
+        }
+        return render(request, 'new_topic.html', context)
+    
