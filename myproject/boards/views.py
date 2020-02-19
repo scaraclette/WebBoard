@@ -12,6 +12,9 @@ def home(request):
     }
     return render(request, 'home.html', context)
 
+def board_redirect(request):
+    return redirect('home')
+
 def board_topics(request, board_id):
     try:
         board = Board.objects.get(id=board_id)
@@ -42,29 +45,3 @@ def new_topic(request, board_id):
     else:
         form = NewTopicForm()
     return render(request, 'new_topic.html', {'board': board, 'form': form})
-
-# def new_topic(request, board_id):
-#     board = get_object_or_404(Board, pk=board_id)
-#     user = User.objects.first() # TODO: get the currently logged in user
-#     if request.method == 'POST':
-#         form = NewTopicForm(request.POST)
-#         if form.is_valid():
-#             topic = form.save(commit=False)
-#             topic.board = board
-#             topic.starter = user
-#             topic.save()
-#             post = Post.objects.create(
-#                 message=form.cleaned_data.get('message'),
-#                 topic=topic,
-#                 created_by=user
-#             )
-#             return redirect('board_topics', board_id=board.id) # TODO: redirect to the created topic page
-#         else:
-#             form = NewTopicForm()
-
-#         context = {
-#             'board':board,
-#             'form':form
-#         }
-#         return render(request, 'new_topic.html', context)
-    

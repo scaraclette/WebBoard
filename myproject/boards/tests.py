@@ -1,6 +1,6 @@
 from django.urls import reverse,resolve
 from django.test import TestCase
-from .views import home, board_topics, new_topic
+from .views import home, board_topics, new_topic, board_redirect
 from .models import Board, Topic, Post
 from django.test import Client, TestCase
 from django.contrib.auth.models import User
@@ -22,6 +22,11 @@ class HomeTests(TestCase):
         # need to put slash on resolve('/') because it matches URL name rather than path resolve('')
         view = resolve('/')
         self.assertEquals(view.func, home)
+    
+    # Created own test to redirect user when they enter /boards/
+    def test_home_url_board_redirect(self):
+        view = resolve('/boards/')
+        self.assertEquals(view.func, board_redirect)
 
     def test_home_view_contains_link_to_topics_page(self):
         board_topics_url = reverse('board_topics', kwargs={'board_id':self.board.id})
