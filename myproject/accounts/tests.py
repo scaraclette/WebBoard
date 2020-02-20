@@ -24,29 +24,22 @@ class SignUpTests(TestCase):
         form = self.response.context.get('form')
         self.assertIsInstance(form, SignUpForm)
 
-    def SignUpTests(TestCase):
-        '''
-        The view must contain five inputs: csrf, username, email, password1, password2
-        '''
-        self.assertContains(self.response, '<input', 5)
-        self.assertContains(self.response, 'type="text"', 1)
-        self.assertContains(self.response, 'type="email"', 1)
-        self.assertContains(self.response, 'type="password"', 2)
-
 class SuccessfulSignUpTests(TestCase):
     def setUp(self):
         url = reverse('signup')
+        # Make sure that the data matches the current form being used. In the tutorial, error was caused because it didn't include email field.
         data = {
-            'username': 'john',
-            'password1': 'abcdef123456',
-            'password2': 'abcdef123456'
+            'username': 'john', 
+            'password1': 'abcdef12345!',
+            'password2': 'abcdef12345!',
+            'email': 'john@alex.com'
         }
         self.response = self.client.post(url, data)
         self.home_url = reverse('home')
 
     def test_redirection(self):
         '''
-        A valid form submission should redirect the user to the home page
+        A valid form submissionshould redirect the user to the home page
         '''
         self.assertRedirects(self.response, self.home_url)
 
@@ -56,28 +49,27 @@ class SuccessfulSignUpTests(TestCase):
     def test_user_authentication(self):
         '''
         Create a new request to an arbitrary page.
-        The resulting response should now have a `user` to its context,
-        after a successful sign up.
+        The resulting response should now have a 'user to its context,
+        after a sucessful sign up.
         '''
         response = self.client.get(self.home_url)
         user = response.context.get('user')
         self.assertTrue(user.is_authenticated)
 
-class InvalidSignUpTests(TestCase):
-    def setUp(self):
-        url = reverse('signup')
-        self.response = self.client.get(url, {})
+    def InvalidSignUpTests(TestCase):
+        def setUp(self):
+            url = reverse('signup')
+            self.response = self.client.post(url, {}) # submit an empty form
 
-    def test_signup_status_code(self):
-        '''
-        An invalid form submission should return to the same page
-        '''
-        self.assertEquals(self.response.status_code, 200)
+        def test_signup_status_code(self):
+            '''
+            An invalid form submission should return to the same page
+            '''
+            self.assertEquals(self.response.status_code, 200)
+        
+        def test_form_errors(self):
+            form = self.response.context.get('form')
+            self.assertTrue(form.errors)
 
-    # TODO: fix test
-    def test_form_errors(self):
-        form = self.response.context.get('form')
-        self.assertTrue(form.errors)
-
-    def test_dont_create_user(self):
-        self.assertFalse(User.objects.exists())
+        def test_dont_create_user(self):
+            self.assertFalse(User.objects.exists())

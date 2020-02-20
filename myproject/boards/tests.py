@@ -101,7 +101,6 @@ class NewTopicTests(TestCase):
         which makes sense because we're testing a POST request within the view instead of GET
         '''
         response = self.client.post(url)
-        print(response)
         self.assertContains(response, 'csrfmiddlewaretoken')
 
     def test_new_topic_valid_post_data(self):
