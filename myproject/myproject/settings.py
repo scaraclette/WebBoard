@@ -130,3 +130,7 @@ STATICFILES_DIRS = [
 
 # URL Starting point already configured on line 53
 # ROOT_URLCONF = 'myproject.urls'
+
+# Where to redirect after login and logout
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
